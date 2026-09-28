@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rbac-test-pod
+  namespace: ecommerce
+
+spec:
+  serviceAccountName: ecommerce-reader
+
+  containers:
+    - name: nginx
+      image: nginx

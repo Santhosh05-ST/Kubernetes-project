@@ -1,0 +1,53 @@
+replicaCount: 1
+
+userService:
+  replicaCount: 1
+
+  image:
+    repository: ecommerce-microservices-user-service
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  database:
+    host: postgres
+    port: 5432
+    name: user_db
+    username: postgres
+    password: postgres
+
+productService:
+  replicaCount: 1
+  image:
+    repository: ecommerce-microservices-product-service
+    tag: latest
+    pullPolicy: IfNotPresent
+
+orderService:
+  replicaCount: 1
+  image:
+    repository: ecommerce-microservices-order-service
+    tag: latest
+    pullPolicy: IfNotPresent
+
+notificationService:
+  replicaCount: 1
+  image:
+    repository: ecommerce-microservices-notification-service
+    tag: latest
+    pullPolicy: IfNotPresent
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: ecommerce-microservices-frontend
+    tag: v3
+    pullPolicy: IfNotPresent
+
+postgres:
+  replicaCount: 1
+  image:
+    repository: postgres
+    tag: "16"
+    pullPolicy: IfNotPresent
+  username: postgres
+  password: postgres

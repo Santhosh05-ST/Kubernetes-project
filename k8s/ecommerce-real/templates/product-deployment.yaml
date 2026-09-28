@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: product-service
+
+spec:
+  replicas: {{ .Values.productService.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: product-service
+
+  template:
+    metadata:
+      labels:
+        app: product-service
+
+    spec:
+      containers:
+        - name: product-service
+          image: "{{ .Values.productService.image.repository }}:{{ .Values.productService.image.tag }}"
+          imagePullPolicy: "{{ .Values.productService.image.pullPolicy }}"
+
+          ports:
+            - name: http
+              containerPort: 8080
+
+          env:
+            - name: DB_HOST
+              value: "postgres"
+
+            - name: DB_PORT
+              value: "5432"
+
+            - name: DB_NAME
+              value: "product_db"
+
+            - name: DB_USERNAME
+              value: "{{ .Values.postgres.username }}"
+
+            - name: DB_PASSWORD
+              value: "{{ .Values.postgres.password }}"

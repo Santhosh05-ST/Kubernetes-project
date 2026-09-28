@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ include "ecommerce-real.fullname" . }}-user
+  labels:
+    {{- include "ecommerce-real.labels" . | nindent 4 }}
+
+spec:
+  replicas: {{ .Values.userService.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: user-service
+
+  template:
+    metadata:
+      labels:
+        app: user-service
+
+    spec:
+      containers:
+        - name: user-service
+          image: "{{ .Values.userService.image.repository }}:{{ .Values.userService.image.tag }}"
+          imagePullPolicy: {{ .Values.userService.image.pullPolicy }}
+
+          ports:
+            - name: http
+              containerPort: 8080
+
+          env:
+            - name: DB_HOST
+              value: "postgres"
+
+            - name: DB_PORT
+              value: "5432"
+
+            - name: DB_NAME
+              value: "{{ .Values.userService.database.name }}"
+
+            - name: DB_USERNAME
+              value: "{{ .Values.postgres.username }}"
+
+            - name: DB_PASSWORD
+              value: "{{ .Values.postgres.password }}"

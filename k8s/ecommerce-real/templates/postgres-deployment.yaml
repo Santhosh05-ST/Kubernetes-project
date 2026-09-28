@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: postgres
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: postgres
+
+  template:
+    metadata:
+      labels:
+        app: postgres
+
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+
+          ports:
+            - containerPort: 5432
+
+          env:
+            - name: POSTGRES_USER
+              value: "{{ .Values.postgres.username }}"
+
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.postgres.password }}"
+
+            - name: POSTGRES_DB
+              value: "{{ .Values.userService.database.name }}"
+
+          volumeMounts:
+            - name: postgres-init-script
+              mountPath: /docker-entrypoint-initdb.d/01-create-databases.sh
+              subPath: 01-create-databases.sh
+
+      volumes:
+        - name: postgres-init-script
+          configMap:
+            name: postgres-init-script
+            defaultMode: 0755

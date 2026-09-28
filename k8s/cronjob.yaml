@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ecommerce-test-cronjob
+  namespace: ecommerce
+
+spec:
+  schedule: "*/1 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: cron-test
+              image: busybox
+              command: ["sh", "-c", "date; echo CronJob executed successfully"]
+          restartPolicy: Never
