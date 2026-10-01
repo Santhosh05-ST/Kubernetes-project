@@ -19,10 +19,22 @@ spec:
         app: user-service
 
     spec:
+      serviceAccountName: ecommerce-user
+      volumes:
+        - name: spire-agent-socket
+          hostPath:
+            path: /run/spire/agent-sockets
+            type: Directory
+
       containers:
         - name: user-service
           image: "{{ .Values.userService.image.repository }}:{{ .Values.userService.image.tag }}"
-          imagePullPolicy: {{ .Values.userService.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.userService.image.pullPolicy | quote }}
+
+          volumeMounts:
+            - name: spire-agent-socket
+              mountPath: /run/spire/agent-sockets
+              readOnly: true
 
           ports:
             - name: http

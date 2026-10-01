@@ -17,10 +17,22 @@ spec:
         app: order-service
 
     spec:
+      serviceAccountName: ecommerce-order
+      volumes:
+        - name: spire-agent-socket
+          hostPath:
+            path: /run/spire/agent-sockets
+            type: Directory
+
       containers:
         - name: order-service
           image: "{{ .Values.orderService.image.repository }}:{{ .Values.orderService.image.tag }}"
-          imagePullPolicy: {{ .Values.orderService.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.userService.image.pullPolicy | quote }}
+
+          volumeMounts:
+            - name: spire-agent-socket
+              mountPath: /run/spire/agent-sockets
+              readOnly: true
 
           ports:
             - name: http
